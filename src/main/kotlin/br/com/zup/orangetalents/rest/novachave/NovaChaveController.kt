@@ -4,11 +4,14 @@ import br.com.zup.orangetalents.KeyManagerRegisterGrpcServiceGrpc
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Error
 import io.micronaut.http.annotation.Post
+import io.micronaut.http.hateoas.JsonError
 import io.micronaut.http.uri.UriBuilder
 import io.micronaut.validation.Validated
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 
 @Controller("/api/pix")
@@ -22,5 +25,12 @@ class NovaChaveController(
 
         val uri = UriBuilder.of("/api/pix/{id}").expand(mutableMapOf(Pair("id", response.pixId)))
         return HttpResponse.created(uri)
+    }
+
+    @Error(exception = ConstraintViolationException::class)
+    fun erroHandler(exception: ConstraintViolationException): HttpResponse<Any> {
+        return HttpResponse
+            .badRequest<Any>()
+            .body(JsonError(exception.message))
     }
 }

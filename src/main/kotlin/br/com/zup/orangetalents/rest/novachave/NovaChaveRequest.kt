@@ -18,10 +18,10 @@ data class NovaChaveRequest(
     val idCliente: String,
 
     @field:NotNull
-    val tipoChave: TipoChave,
+    val tipoChave: TipoChave?,
 
     @field:NotNull
-    val tipoConta: TipoConta,
+    val tipoConta: TipoConta?,
 
     val chave: String
 ) {
@@ -30,8 +30,8 @@ data class NovaChaveRequest(
         return ChavePixRequest
             .newBuilder()
             .setChave(chave)
-            .setTipoChave(tipoChave.grpcValue)
-            .setTipoConta(tipoConta.grpcValue)
+            .setTipoChave(tipoChave?.grpcValue)
+            .setTipoConta(tipoConta?.grpcValue)
             .setCodigoCliente(idCliente)
             .build()
     }
